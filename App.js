@@ -1,43 +1,34 @@
 import React, { useState } from 'react';
 import { Button, StyleSheet, TextInput, View, Text, FlatList } from 'react-native';
 
+import ContatoItem from './components/ContatoItem'
+import ContatoInput from './components/ContatoInput'
+
 export default function App() {
-  const [contato, setContato] = useState({nome: '', telefone: ''});
   const [contatos, setContatos] = useState([]);
   const [contador, setContador] = useState(0);
   // Funções de ação
-  const capturarNome = (nome) => {
-    setContato({nome: nome, telefone: contato.telefone});
-  }
-  const capturarTelefone = (telefone) => {
-    setContato({nome: contato.nome, telefone: telefone});
-  }
-  const adicionarContato = () => {
+  const adicionarContato = (contato) => {
     setContatos(contatos => {
       setContador(contador + 1);
       return [...contatos, {key: contador.toString(), value: contato}];
     });
-    setContato({nome: '', telefone: ''});
     console.log(contatos);
+  }
+  const removerContato = (keyASerRemovida) => {
+    setContatos(contatos => {
+      return contatos.filter(contato => (contato.key !== keyASerRemovida));
+    })
   }
   return (
     <View style={styles.container}>
-      <View style={styles.inputView}>
-        {/* Inserção de Lembretes */}
-        <View style={{flexDirection: 'row', width: '100%', justifyContent: 'space-between'}}>
-          <TextInput placeholder="Nome" style={styles.inputField} onChangeText={capturarNome} value={contato.nome}/>
-          <TextInput placeholder="Telefone" style={styles.inputField} onChangeText={capturarTelefone} value={contato.telefone}/>
-        </View>
-        <Button title="Cadastrar" onPress={adicionarContato}></Button>
-      </View>
+      <ContatoInput onAdicionarContato={adicionarContato}/>
       <FlatList
         data={contatos}
         style={{width: '80%'}}
-        renderItem={
+        renderItem={ 
           contato =>
-          <View style={styles.itemView} key={contato.item.key}>
-            <Text>{`Nome: ${contato.item.value.nome} - Telefone: ${contato.item.value.telefone}`} </Text>
-          </View>
+          <ContatoItem chave={contato.item.key} onDelete={removerContato} contato={contato.item.value}/>
         }  
       />
     </View>
@@ -49,24 +40,5 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 50,
     alignItems: 'center'
-  },
-  inputView: {
-    width: '80%',
-    padding: 12
-  },
-  inputField: {
-    flex: .49,
-    borderBottomColor: 'black', 
-    borderBottomWidth: 1,
-    marginBottom: 4,
-    padding: 2
-  },
-  itemView: {
-    flexDirection: 'row',
-    borderColor: '#2196F3',
-    margin: 10,
-    padding: 12,
-    borderWidth: 3,
-    borderRadius: 15
   }
 });
