@@ -16,7 +16,7 @@ const ContatoInput = (props) => {
                 <TextInput placeholder="Nome" style={styles.inputField} onChangeText={capturarNome} value={contato.nome}/>
                 <TextInput placeholder="Telefone" style={styles.inputField} onChangeText={capturarTelefone} value={contato.telefone}/>
             </View>
-            <Button title="Cadastrar" onPress={() => {props.onAdicionarContato(contato); setContato({nome: '', telefone: ''}); }}></Button>
+            <Button title="Cadastrar" onPress={ () => {props.navigation.navigate('Lista', {contato: contato})}}></Button>
         </View>
     );
 }
