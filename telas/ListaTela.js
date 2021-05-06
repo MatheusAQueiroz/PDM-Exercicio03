@@ -1,49 +1,39 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Platform, FlatList } from 'react-native';
+import React, { useEffect } from 'react';
+import { Platform, FlatList } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import { useSelector, useDispatch } from 'react-redux';
+import * as contatosActions from '../store/contatos-actions';
 
 import ContatoItem from '../components/ContatoItem';
-import { BotaoCabecalho } from '../components/BotaoCabecalho';
+import BotaoCabecalho from '../components/BotaoCabecalho';
 
 const ListaTela = (props) => {
-    const [contatos, setContatos] = useState([]);
-    const [contador, setContador] = useState(0);
-    // Funções de ação
-    const adicionarContato = (contato) => {
-        setContatos(contatos => {
-            setContador(contador + 1);
-            return [...contatos, {key: contador.toString(), value: contato}];
-        });
-        console.log(contatos);
-    }
-    const removerContato = (keyASerRemovida) => {
-        setContatos(contatos => {
-        return contatos.filter(contato => (contato.key !== keyASerRemovida));
-        })
-    }
-    const params = props.navigation.state.params;
-    if (params && params.contato) {
-        adicionarContato(params.contato);
-        props.navigation.state.params.contato = null;
-    }
+    const contatos = useSelector(estado => estado.contatos.contatos);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(contatosActions.listarContatos())
+    }, [dispatch])
     return (
-        <View style={styles.container}>
-            <FlatList
-                data={contatos}
-                style={{width: '80%'}}
-                renderItem={ 
-                    contato =>
-                    <ContatoItem chave={contato.item.key} onDelete={removerContato} contato={contato.item.value}/>
-                }  
-            />
-        </View>
+        <FlatList
+            data={contatos}
+            keyExtractor={contato => contato.id}
+            renderItem={contato =>
+                <ContatoItem 
+                    onSelect={() => props.navigation.navigate('Detalhes', {idContato: contato.item.id, nomeContato: contato.item.nome})}
+                    imagemUri={contato.item.imagem}
+                    nome={contato.item.nome} 
+                    telefone={contato.item.telefone}
+                />
+            }
+        />
     )
 };
 
-ListaTela.navigationOptions = dadosNav => {
+ListaTela.navigationOptions = (dadosNav) => {
     return {
-        headerTitle: "Lista de Contatos",
-        headerRight:
+        headerTitle: 'Lista de Contatos',
+        headerRight: () =>
             <HeaderButtons
                 HeaderButtonComponent={BotaoCabecalho}>
                 <Item
@@ -53,13 +43,5 @@ ListaTela.navigationOptions = dadosNav => {
             </HeaderButtons>
     }
 };
-
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      paddingTop: 50,
-      alignItems: 'center'
-    }
-});
 
 export default ListaTela;

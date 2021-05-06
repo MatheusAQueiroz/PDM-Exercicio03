@@ -6,15 +6,14 @@ import Cores from '../constantes/Cores';
 
 import ListaTela from '../telas/ListaTela';
 import EntradaTela from '../telas/EntradaTela';
+import DetalhesTela from '../telas/DetalhesTela';
 
 const Navegador = createStackNavigator({
     Lista: ListaTela,
-    Entrada: EntradaTela
+    Entrada: EntradaTela,
+    Detalhes: DetalhesTela
 }, {
     defaultNavigationOptions: {
-        headerStyle: {
-        backGroundColor: Platform.OS === 'android' ? Cores.primary : 'white'
-    },
         headerTintColor: Platform.OS === 'android' ? 'white' : Cores.primary
     }
 });
