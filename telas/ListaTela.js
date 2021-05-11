@@ -21,9 +21,7 @@ const ListaTela = (props) => {
             renderItem={contato =>
                 <ContatoItem 
                     onSelect={() => props.navigation.navigate('Detalhes', {idContato: contato.item.id, nomeContato: contato.item.nome})}
-                    imagemUri={contato.item.imagem}
-                    nome={contato.item.nome} 
-                    telefone={contato.item.telefone}
+                    contato={contato.item}
                 />
             }
         />

@@ -4,7 +4,7 @@ import { inserirContato, buscarContatos } from '../helpers/db';
 export const ADD_CONTATO = 'ADD_CONTATO';
 export const LISTA_CONTATOS = 'LISTA_CONTATOS';
 
-export const addContato = (nome, telefone, imagem) => {
+export const addContato = (nome, telefone, imagem, tempo, lat, lng) => {
     return async dispatch => {
         const nomeArquivo = imagem.split('/').pop();
         const novoPath = FileSystem.documentDirectory + nomeArquivo;
@@ -13,10 +13,10 @@ export const addContato = (nome, telefone, imagem) => {
                 from: imagem,
                 to: novoPath
             });
-            const resultadoDB = await inserirContato(nome, telefone, imagem);
+            const resultadoDB = await inserirContato(nome, telefone, novoPath, tempo, lat, lng);
             dispatch({
                 type: ADD_CONTATO,
-                dadosContato: {id: resultadoDB.insertId, nome: nome, telefone: telefone, imagem: novoPath}
+                dadosContato: {id: resultadoDB.insertId, nome: nome, telefone: telefone, imagem: novoPath, tempo: tempo, lat: lat, lng: lng}
             })
         }
         catch (err){
